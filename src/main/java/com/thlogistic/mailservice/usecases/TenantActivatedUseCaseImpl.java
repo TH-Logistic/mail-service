@@ -1,6 +1,6 @@
 package com.thlogistic.mailservice.usecases;
 
-import com.thlogistic.mailservice.adapters.dtos.ForgetPasswordRequest;
+import com.thlogistic.mailservice.adapters.dtos.TenantActivatedRequest;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -14,25 +14,24 @@ import java.nio.charset.StandardCharsets;
 
 @Service
 @RequiredArgsConstructor
-public class ForgetPasswordUseCaseImpl implements ForgetPasswordUseCase {
+public class TenantActivatedUseCaseImpl implements TenantActivatedUseCase {
     private final JavaMailSender emailSender;
     private final SpringTemplateEngine templateEngine;
 
     @Override
-    public Boolean execute(ForgetPasswordRequest request) {
+    public Boolean execute(TenantActivatedRequest request) {
         MimeMessage message = emailSender.createMimeMessage();
         try {
             MimeMessageHelper helper = new MimeMessageHelper(message, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
             Context context = new Context();
 
-            helper.setFrom("noreply@thlogistic.com");
             helper.setTo(request.getDestinationEmail());
-            helper.setSubject("[THLogistic] Reset password successfully");
+            helper.setSubject("[THLogistic] Your service has been activated");
 
-            context.setVariable("mail", request.getEmail());
-            context.setVariable("newPassword", request.getNewPassword());
+            context.setVariable("name", request.getName());
+            context.setVariable("package", request.getPackageName());
 
-            String html = templateEngine.process("forget-password-template", context);
+            String html = templateEngine.process("tenant-activated-template", context);
             helper.setText(html, true);
             emailSender.send(message);
         } catch (MessagingException e) {

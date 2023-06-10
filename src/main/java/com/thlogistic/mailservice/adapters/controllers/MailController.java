@@ -1,7 +1,7 @@
 package com.thlogistic.mailservice.adapters.controllers;
 
 import com.thlogistic.mailservice.adapters.dtos.*;
-import com.thlogistic.mailservice.usecases.ForgetPasswordUseCase;
+import com.thlogistic.mailservice.usecases.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,6 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class MailController extends BaseController implements MailResource {
 
     private final ForgetPasswordUseCase forgetPasswordUseCase;
+    private final AccountActivatedUseCase accountActivatedUseCase;
+    private final AccountSuspendedUseCase accountSuspendedUseCase;
+    private final TenantActivatedUseCase tenantActivatedUseCase;
+    private final TenantSuspendedUseCase tenantSuspendedUseCase;
 
     @Override
     public ResponseEntity<Object> forgetPassword(ForgetPasswordRequest request) {
@@ -20,21 +24,25 @@ public class MailController extends BaseController implements MailResource {
 
     @Override
     public ResponseEntity<Object> accountActivated(AccountActivatedRequest request) {
-        return null;
+        accountActivatedUseCase.execute(request);
+        return successResponse(true, null);
     }
 
     @Override
     public ResponseEntity<Object> accountSuspended(AccountSuspendedRequest request) {
-        return null;
+        accountSuspendedUseCase.execute(request);
+        return successResponse(true, null);
     }
 
     @Override
     public ResponseEntity<Object> tenantActivated(TenantActivatedRequest request) {
-        return null;
+        tenantActivatedUseCase.execute(request);
+        return successResponse(true, null);
     }
 
     @Override
     public ResponseEntity<Object> tenantSuspended(TenantSuspendedRequest request) {
-        return null;
+        tenantSuspendedUseCase.execute(request);
+        return successResponse(true, null);
     }
 }
